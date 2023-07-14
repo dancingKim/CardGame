@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"path": "../.."
+	},
+	{
+		"path": "../../../cardImg"
+	}
+],
+  "settings": {
+    "liveServer.settings.port": 5501,
+    "liveServer.settings.multiRootWorkspaceName": "Jungsuk_Fromt"
+  }
+}

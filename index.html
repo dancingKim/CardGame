@@ -1,0 +1,455 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			http-equiv="X-UA-Compatible"
+			content="IE=edge" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+			#buffer {
+				background-color: goldenrod;
+				width: auto;
+				height: auto;
+			}
+			#board {
+				background-color: rgb(241, 116, 116);
+				width: auto;
+				height: auto;
+			}
+			#table {
+				background-color: cadetblue;
+				width: auto;
+				height: auto;
+			}
+
+			img {
+				display: inline-block;
+				width: auto;
+				height: auto;
+			}
+
+			.front {
+				display: inline-block;
+			}
+			.back {
+				display: inline-block;
+			}
+			#button {
+				background-color: beige;
+				color: brown;
+			}
+			.button > * {
+				width: 150px; /* 또는 원하는 너비 값 */
+				height: 50px; /* 또는 원하는 높이 값 */
+			}
+
+			* {
+				border-width: 0px;
+				border-color: black;
+				font-size: large;
+				width: auto;
+				height: auto;
+			}
+
+			img {
+				width: 5%;
+				height: 5%;
+				border-color: beige;
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+			window.onload = function () {
+				let c = new Card();
+				let d = new Deck();
+				let p = new Print();
+				let b = new Board();
+				let h = new Handler();
+
+				console.dir(d);
+				console.dir(c);
+				console.dir(p);
+				console.dir(b);
+				// p.print(부모 태그, 만들 태그, id, class,)
+				console.dir(b.getTable());
+				console.dir(b.getButton());
+				console.dir(b.getButton()[0]);
+
+				p.print('body', 'div', 'board', 'board', '');
+				p.print('board', 'div', 'button', 'button', '');
+				p.print('button', 'input', 'button', `${b.getButton()[0]}`, '섞기');
+				p.print('button', 'input', 'button', `${b.getButton()[1]}`, '보기');
+				p.print('button', 'input', 'button', `${b.getButton()[2]}`, '숨기기');
+				p.print('board', 'div', `${b.getTable()}`, `${b.getTable()}`, '');
+				p.print('board', 'div', `${b.getConsole()}`, `${b.getConsole()}`, '');
+				p.print('board', 'div', `${b.getTable()}`, `${b.getTable()}`, '');
+
+				// p.printBoard();
+				// p.printButton();
+				// p.printSuffleButton();
+				// p.printShowButton();
+				// p.printHideButton();
+				// p.printTable();
+				// p.printConsole();
+				// p.printBuffer();
+
+				//call funtioin upload image;
+				//uploadImage(cardKind, cardNum, deck)
+				//
+
+				uploadImg(d, p);
+
+				let photo = document.getElementsByClassName('table');
+				let shuffle = document.getElementsByClassName('shuffle');
+				let show = document.getElementsByClassName('show');
+				let hide = document.getElementsByClassName('hide');
+
+				photo[0].addEventListener('click', function (e) {
+					e.stopPropagation();
+
+					if (e.target.id == 'table') {
+						document.getElementById('console').innerHTML +=
+							'   이건 비싼 테이블이라네~ 카드만 만지시게!      ';
+					} else {
+						h.photoHandler(e);
+					}
+				});
+
+				shuffle[0].addEventListener('click', function (e) {
+					e.stopPropagation();
+					h.shuffleHandler(e);
+				});
+
+				show[0].addEventListener('click', function (e) {
+					e.stopPropagation();
+					h.showHandler(e);
+				});
+
+				hide[0].addEventListener('click', function (e) {
+					e.stopPropagation();
+					h.hideHandler(e);
+				});
+			};
+			//create board
+			//create cardlist
+			//upload cards on board
+			//front
+			//back
+
+			function Board() {
+				this.table = 'table';
+				this.button = ['shuffle', 'show', 'hide'];
+				this.console = 'console';
+
+				this.getTable = function () {
+					return this.table;
+				};
+				this.getButton = function () {
+					return this.button;
+				};
+				this.getConsole = function () {
+					return this.console;
+				};
+			}
+
+			function Card(kind, num) {
+				const kindSpade = 4;
+				const kindHeart = 3;
+				const kindDiamond = 1;
+				const kindClover = 2;
+				this.kind = kind;
+				this.num = num;
+
+				this.getKind = function () {
+					return this.kind;
+				};
+
+				this.getNumber = function () {
+					return this.num;
+				};
+
+				this.toString = function () {
+					let k = ['', 'Spade', 'Heard', 'Diamond', 'Clover'];
+					let n = [
+						'',
+						'A',
+						'2',
+						'3',
+						'4',
+						'5',
+						'6',
+						'7',
+						'8',
+						'9',
+						'J',
+						'Q',
+						'K',
+					];
+					return k[this.kind] + n[this.num];
+				};
+			}
+
+			function Deck() {
+				this.myCard = new Array(52);
+
+				for (let i = 1, index = 0; i < 5; i++) {
+					for (let j = 1; j < 14; j++) {
+						this.myCard[index++] = new Card(i, j);
+					}
+				}
+
+				this.getMyCard = function () {
+					return this.myCard;
+				};
+			}
+
+			function checkNum() {
+				//set size가 1이라면 같은 카드를 뽑은 거임.
+				console.log('mySet.size :', mySet.size);
+				if (mySet.size == 1) {
+					document.getElementById('console').innerHTML =
+						'이런, 똑같은 카드를 뽑았구만!';
+				}
+				//set size가 2면 뽑아서 비교
+				//id값은 kind*100 + number이므로 100으로 나눈 나머지 값을 비교한다.
+				if (mySet.size == 2) {
+					let arr = [];
+					iteratorMySet = mySet[Symbol.iterator]();
+					for (i of iteratorMySet) {
+						arr.push(i);
+						console.log(i);
+					}
+					console.log(parseInt(parseInt(arr[0]) % 100));
+					console.log(parseInt(parseInt(arr[1]) % 100));
+
+					if (
+						parseInt(parseInt(arr[0]) % 100) == parseInt(parseInt(arr[1]) % 100)
+					) {
+						document.getElementById('console').innerHTML =
+							'맞췄어! 이런 천재는 난생 처음이야! 자네 나와 함게 다니지 않을래나?';
+						document.getElementById(arr[0]).outerHTML = '';
+						document.getElementById(arr[1]).outerHTML = '';
+					} else {
+						document.getElementById('console').innerHTML =
+							'아쉽지만 수가 다른 카드라네. 자네는 할 수 있네! 다시 해 보게!';
+					}
+				}
+				document.getElementById('buffer').innerHTML = '';
+				mySet.clear();
+			}
+
+			let mySet = new Set();
+
+			function cardBuffer(e) {
+				mySet.add(e.target.id);
+
+				let newStart = document.getElementById('buffer').childElementCount;
+				console.log('newStart', newStart);
+				if (newStart == 0) {
+					document.getElementById('console').innerHTML = '';
+				}
+
+				document.getElementById('buffer').innerHTML += document.getElementById(
+					e.target.id,
+				).outerHTML;
+
+				let count = document.getElementById('buffer').childElementCount;
+				console.log('count:', count);
+
+				if (count == 2) {
+					checkNum();
+					document.getElementById('buffer').innerHTML = '';
+				}
+			}
+
+			function Handler() {
+				this.hideHandler;
+				this.showHandler;
+				this.photoHandler;
+				this.shuffleHandler;
+
+				this.hideHandler = function (e) {
+					let arr = document.querySelectorAll('.front');
+
+					for (let i = 0; i < arr.length; i++) {
+						arr[i].setAttribute('src', './back.png');
+						arr[i].setAttribute('class', 'back');
+						// i.setAttribute('src', './back.png');
+						// i.setAttribute('class', 'back');
+					}
+					document.getElementById('console').innerHTML = '';
+				};
+
+				this.showHandler = function (e) {
+					let arr = document.querySelectorAll('.back');
+
+					for (i of arr) {
+						parseInt(i.id);
+						arr[i];
+						let mod = parseInt(i.id) % 100;
+						let div = parseInt(parseInt(i.id) / 100);
+						let locate = './' + div + '_' + mod + '.png';
+						i.setAttribute('src', locate);
+						i.setAttribute('class', 'front');
+					}
+					document.getElementById('console').innerHTML = '';
+				};
+
+				this.shuffleHandler = function (e) {
+					let cardNum = document.getElementById('table').childElementCount;
+
+					if (cardNum == 52) {
+						for (let i = 1; i < 53; i++) {
+							let x = parseInt(Math.random() * 4) + 1;
+							let y = parseInt(Math.random() * 13) + 1;
+							let key = x * 100 + y + '';
+
+							let tmp = '';
+
+							tmp = document.getElementById(key).outerHTML;
+							document.getElementById(key).outerHTML = document.querySelector(
+								'#table :nth-child(' + i + ')',
+							).outerHTML;
+
+							document.querySelector('#table :nth-child(' + i + ')').outerHTML =
+								tmp;
+						}
+						document.getElementById('console').innerHTML = '';
+					}
+					document.getElementById('console').innerHTML =
+						'게임 중 카드를 섞으면 난이도가 너무 어려워진다네!';
+				};
+
+				this.photoHandler = function (e) {
+					let mod = parseInt(e.target.id) % 100;
+					let div = (parseInt(e.target.id) - mod) / 100;
+
+					if (e.target.className == 'back') {
+						document
+							.getElementById(e.target.id)
+							.setAttribute('src', './' + div + '_' + mod + '.png');
+						document.getElementById(e.target.id).setAttribute('class', 'front');
+						cardBuffer(e);
+					} else {
+						document
+							.getElementById(e.target.id)
+							.setAttribute('src', './back.png');
+						document.getElementById(e.target.id).setAttribute('class', 'back');
+					}
+				};
+			}
+
+			let uploadImg = function uploadImg(d, p) {
+				for (let i = 0; i < 52; i++) {
+					let key =
+						d.getMyCard()[i].getKind() * 100 +
+						d.getMyCard()[i].getNumber() +
+						'';
+					let locate =
+						'./' +
+						d.getMyCard()[i].getKind() +
+						'_' +
+						d.getMyCard()[i].getNumber() +
+						'.png';
+
+					p.printDeck();
+					document.getElementById('target').setAttribute('src', locate);
+					document.getElementById('target').setAttribute('id', key);
+				}
+			};
+
+			function Print() {
+				this.board;
+				this.button;
+				this.shuffleButton;
+				this.showButton;
+				this.hideButton;
+				this.console;
+				this.deck;
+				this.buffer;
+				this.table;
+
+				this.print = function (
+					parentsId = '',
+					whatTag = '',
+					whatId = '',
+					whatClass = '',
+					whatText = '',
+				) {
+					let row;
+					if (whatTag === 'input') {
+						row = `<${whatTag} type=${whatId} class =${whatClass} value=${whatText}></${whatTag}>`;
+					} else {
+						row =
+							`<${whatTag} id=${whatId} class =${whatClass}>` +
+							whatText +
+							`</${whatTag}>`;
+					}
+
+					if (parentsId === 'body') {
+						document.body.innerHTML += row;
+					} else {
+						document.getElementById(`${parentsId}`).innerHTML += row;
+					}
+				};
+
+				this.printBoard = function () {
+					document.body.innerHTML += '<div id = "board"></div>';
+					this.board = document.getElementById('board');
+				};
+
+				this.printButton = function () {
+					board.innerHTML += '<div class = "button"></div>';
+					this.button = document.getElementsByClassName('button');
+				};
+
+				this.printSuffleButton = function () {
+					this.button[0].innerHTML +=
+						'<input type = "button" class = "shuffle">shuffle</input>';
+					this.shuffleButton = document.getElementsByClassName('shuffle');
+				};
+
+				this.printShowButton = function () {
+					this.button[0].innerHTML +=
+						'<input type = "button" class = "show">show</input>';
+					this.showButton = document.getElementsByClassName('show');
+				};
+
+				this.printHideButton = function () {
+					this.button[0].innerHTML +=
+						'<input type = "button" class = "hide">hide</input>';
+					this.hideBotton = document.getElementsByClassName('hide');
+				};
+
+				this.printTable = function () {
+					board.innerHTML += '<div id = "table" class="table"></div>';
+					this.table = document.getElementsByClassName('table');
+				};
+
+				this.printConsole = function () {
+					board.innerHTML += '<div id = "console" class = "console"></div>';
+					this.console = document.getElementsByClassName('console');
+				};
+
+				this.printBuffer = function () {
+					document.getElementById('board').innerHTML +=
+						'<div id = "buffer" class = buffer></div>';
+					this.buffer = document.getElementById('buffer');
+				};
+				this.printDeck = function () {
+					this.table = document.getElementsByClassName('table');
+					this.table[0].innerHTML +=
+						'<img src = "" alt="" id = "target" class = "front"></img>';
+					this.deck = document.getElementsByClassName('deck');
+				};
+			}
+		</script>
+	</body>
+</html>
