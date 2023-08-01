@@ -45,7 +45,7 @@ DB 설계, spring, react에 대해 배우기 전
   git clone https://github.com/dancingKim/CardGame.git
 ```
 
-2. Visual Studio Code로 프로젝트를 엽니다.
+2. Visual Studio Code로 프로젝트를 엽니다.
 
 3. index.html을 엽니다.
 
