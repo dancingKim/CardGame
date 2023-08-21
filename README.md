@@ -67,6 +67,10 @@ DB 설계, spring, react에 대해 배우기 전
 4. 우클릭 후 Open with Live Server를 클릭합니다.
 
 ## 프로젝트 사용 방법
+카드 짝 맞추기 게임입니다. 난이도를 높이려면 섞기를 누르세요. 답을 보고 싶다면 보기를 누르세요. 다시 진행하고 싶다면 숨기기 버튼을 누르세요.
+
+<img width="364" alt="image" src="https://github.com/dancingKim/CardGame/assets/111945532/7527b40c-abcd-4e48-ab13-59142bd67406">
+
 
 ## 팀원 및 참고 자료
 ### 팀 소개
